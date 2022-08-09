@@ -8,7 +8,11 @@
           :checkTodo="checkTodo"
           :deleteTodo="deleteTodo"
         />
-        <MyFooter />
+        <MyFooter
+          :todos="todos"
+          :checkAllTodos="checkAllTodos"
+          :clearAlltodos="clearAlltodos"
+        />
       </div>
     </div>
   </div>
@@ -48,7 +52,20 @@ export default {
     },
     // 删除一个事项
     deleteTodo(id) {
-      this.todos = this.todos.filter((todo) => todo.id !== id)
+      if (confirm('确定删除吗?'))
+        this.todos = this.todos.filter((todo) => todo.id !== id)
+    },
+    //  检查全选todo
+    checkAllTodos(done) {
+      this.todos.forEach((todo) => {
+        todo.done = done
+      })
+    },
+    //  清除已完成
+    clearAlltodos() {
+      return (this.todos = this.todos.filter((todo) => {
+        return !todo.done
+      }))
     },
   },
 }
