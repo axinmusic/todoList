@@ -16,17 +16,22 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 export default {
   name: 'MyItem',
-  props: ['todo', 'checkTodo', 'deleteTodo'],
+  props: ['todo'],
   methods: {
     //  增加一个todo
     handleCheck(id) {
-      this.checkTodo(id)
+      // this.checkTodo(id)
+      // this.$bus.$emit('checkTodo', id)
+      pubsub.publish('checkTodo', id)
     },
     //  删除一个todo
     handleDelete(id) {
-      this.deleteTodo(id)
+      // this.deleteTodo(id)
+      // this.$bus.$emit('deleteTodo', id)
+      pubsub.publish('deleteTodo', id)
     },
   },
 }

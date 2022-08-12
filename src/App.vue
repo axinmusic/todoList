@@ -2,12 +2,9 @@
   <div id="root">
     <div class="todo-container">
       <div class="todo-wrap">
-        <MyHeader :addTodo="addTodo" />
-        <MyList
-          :todos="todos"
-          :checkTodo="checkTodo"
-          :deleteTodo="deleteTodo"
-        />
+        <!-- <MyHeader :addTodo="addTodo" /> -->
+        <MyHeader @addTodo="addTodo" />
+        <MyList :todos="todos" />
         <MyFooter
           :todos="todos"
           :checkAllTodos="checkAllTodos"
@@ -22,6 +19,7 @@
 import MyHeader from './components/MyHeader.vue'
 import MyList from './components/MyList.vue'
 import MyFooter from './components/MyFooter.vue'
+import pubsub from 'pubsub-js'
 
 export default {
   name: 'App',
@@ -41,13 +39,13 @@ export default {
       this.todos.unshift(todoObj)
     },
     // 改变事项的完成状态
-    checkTodo(id) {
+    checkTodo(msgName, id) {
       this.todos.forEach((todo) => {
         if (todo.id === id) todo.done = !todo.done
       })
     },
     // 删除一个事项
-    deleteTodo(id) {
+    deleteTodo(msgName, id) {
       if (confirm('确定删除吗?'))
         this.todos = this.todos.filter((todo) => todo.id !== id)
     },
@@ -71,6 +69,18 @@ export default {
       },
       deep: true,
     },
+  },
+  mounted() {
+    // this.$bus.$on('checkTodo', this.checkTodo)
+    // this.$bus.$on('deleteTodo', this.deleteTodo)
+    this.pubId1 = pubsub.subscribe('checkTodo', this.checkTodo)
+    this.pubId2 = pubsub.subscribe('deleteTodo', this.deleteTodo)
+  },
+  beforeDestroy() {
+    // this.$bus.$off('checkTodo')
+    // this.$bus.$off('deleteTodo')
+    pubsub.unsubscribe(this.pubId1)
+    pubsub.unsubscribe(this.pubId2)
   },
 }
 </script>

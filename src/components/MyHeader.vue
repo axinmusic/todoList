@@ -14,7 +14,7 @@
 import { nanoid } from 'nanoid'
 export default {
   name: 'MyHeader',
-  props: ['addTodo'],
+  // props: ['addTodo'],
   data() {
     return {
       title: '',
@@ -24,7 +24,8 @@ export default {
     add() {
       if (!this.title.trim()) return alert('请输入内容')
       const todoObj = { id: nanoid(), title: this.title, done: false }
-      this.addTodo(todoObj)
+      // this.addTodo(todoObj)
+      this.$emit('addTodo', todoObj)
       this.title = ''
     },
   },
